@@ -10,12 +10,12 @@ const burger = {
         orm.selectAll('burgers', onResult);
     },
 
-    insertOne: function(burger_name, onResult) {
-        orm.insertOne('burgers', 'burger', burger_name, onResult); 
+    insertOne: function(burgerName, onResult) {
+        orm.insertOne('burgers', 'burger_name', burgerName, onResult); 
     },
 
-    updateOne: function(burger_name, devoured, id, onResult) {
-        orm.updateOne('burgers', 'burger', burger_name, devoured, id, onResult);
+    updateOne: function(id, onResult) {
+        orm.updateOne('burgers', 'devoured', 1, id, onResult);
     }
 }
 

@@ -13,7 +13,7 @@ const burger = require('../models/burger.js');
 // Use handlebars to render the main index.html page with all the burgers
 router.get('/', function(req, res) {
     
-    burger.selectAll(function(req,res) {
+    burger.selectAll(function(err, data) {
 
         if (err) {return res.status(500).end(); }
 
