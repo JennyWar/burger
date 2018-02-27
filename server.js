@@ -1,42 +1,36 @@
 // ==========================
-// Dependencies
-// ==========================
+// Dependencies 
+// =========================
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path")
 
-// require npm express package
-const express = require('express');
-// require npm method override package
-const methodOverride = require('method-override');
-// require npm body-parser package
-const bodyParser = require('body-parser');
-// require express-handlebars package
-const exphbs = require("express-handlebars");
-// get the plan routes from the burgers_controller.js file
-const burgerRoutes = require('./controllers/burgers_controller.js');
-  
-// Store the express package in a variable
 const app = express();
-const PORT = process.env.PORT || 3000;
+// Serve static content for the app from the "public" directory in the application directory.
+app.use(express.static(path.join(__dirname, "public")));
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
-// Parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-// Parse application/json
-app.use(bodyParser.json());
+// Require the express-handlebars npm package
+const exphbs = require("express-handlebars");
 
-// Handlebars Engine Setup
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine("handlebars", exphbs({
+    defaultLayout: "main"
+}));
 app.set("view engine", "handlebars");
 
-// Serve up the static assets
-app.use(express.static('public'));
+// Require the routes in the burgers_controller file
+const routes = require("./controllers/burgers_controller");
 
-// Include the plan routes from the controller
-app.use(burgerRoutes);
+app.use("/", routes);
+app.use("/update", routes);
+app.use("/create", routes);
 
-
-// ==============================================
-// Start the server to begin listening
-//===============================================
-app.listen(PORT, function () {
-    console.log('App listening on PORT ' + PORT);
-});
+// ====================
+// listen on port 3000
+// ====================
+const port = process.env.PORT || 3000;
+app.listen(port);
