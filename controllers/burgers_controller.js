@@ -10,45 +10,40 @@ const burger = require('../models/burger.js');
 // Routes
 // ===========================
 
-// Use handlebars to render the main index.html page with all the burgers
-router.get('/', function(req, res) {
-    
-    burger.selectAll(function(err, data) {
+// get route -> index
+router.get("/", function (req, res) {
+    res.redirect("/burgers");
+});
 
-        if (err) {return res.status(500).end(); }
-
-        res.render('index', {burgers: data });
+router.get("/burgers", function (req, res) {
+    // express callback response by calling burger.selectAllBurger
+    burger.all(function (data) {
+        // Wrapping the array of returned burgers in a object so it can be referenced inside our handlebars
+        var hbsObject = { burgers: data };
+        res.render("index", hbsObject);
     });
 });
 
-
-// Add a new burger
-router.post('/burgers', function(req, res) {
-
-    // call the model that creates a new burger
-    burger.insertOne(req.body.burger, function(err, data) {
-
-        if (err) {return res.status(500).end(); }
-
-        res.json({ id: data.insertId });
+// post route -> back to index
+router.post("/burgers/create", function (req, res) {
+    // takes the request object using it as input for buger.addBurger
+    burger.create(req.body.burger_name, function (result) {
+        // wrapper for orm.js that using MySQL insert callback will return a log to console,
+        // render back to index with handle
+        console.log(result);
+        res.redirect("/");
     });
 });
 
-
-// Update a burger
-router.put('/burgers/:id', function(req, res) {
-
-    burger.updateOne(req.body.burger_name, req.params.id, function(err, data) {
-
-        if (err) {return res.status(500).end(); }
-        // If not rows were changed, than id didn't exist so a 404 error will be displayed
-        if (data.changedRows ===0) {
-
-            return res.status(404).end();
-        }
-
-        res.status(200).end();
-    })
+// put route -> back to index
+router.put("/burgers/update/:id", function (req, res) {
+    burger.update(req.params.id, function (result) {
+        // wrapper for orm.js that using MySQL update callback will return a log to console,
+        // render back to index with handle
+        console.log(result);
+        // Send back response and let page reload from .then in Ajax
+        res.json("/");
+    });
 });
 
 
