@@ -48,6 +48,6 @@ router.put("/burgers/update/:id", function (req, res) {
 
 
 // =====================
-// Export to other files
+// Export router to other files
 // =====================
 module.exports = router;
